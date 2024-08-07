@@ -44,7 +44,7 @@ def predict_class(sentence):
         return_list.append({'intent': classes[r[0]], 'probability': str(r[1])})
     return return_list
 
-def get_response(intents_list, intents_json):
+def get_response(intents_list, intents_json=intents):
     result = "I don't understand."
     tag = intents_list[0]['intent']
     list_of_intents = intents_json['intents']
@@ -57,7 +57,7 @@ def get_response(intents_list, intents_json):
 
 isTraining = True
 print("bot is running!")
-while True:
+while False:
     message = input("").lower()
     ints = predict_class(message)
     

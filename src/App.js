@@ -4,28 +4,20 @@ import './App.css';
 
 function App() {
 
-  function sendMessage(msg) {
-    fetch('http://localhost:5000/send_message', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({"question": "What is your favorite game?"}),
-    })
-    .then(response => response.json())
-    .then(response => console.log(response))
-    .catch(error => console.error('Error:', error));
-    
+  const [messages, setMessages] = useState([])
+
+  const updateMessage = (msg) => {
+    messages.push(msg)
   }
 
   useEffect(() => {
-    sendMessage("hello world!")
+    //
   }, []);
 
   return (
     <div className="App">
-      hello world
-      <InputBar/>
+      goofy chatbot
+      <InputBar message={messages} updateMessage={updateMessage}/>
     </div>
   );
 }

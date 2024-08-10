@@ -26,7 +26,7 @@ export function InputBar({ message, updateMessage }) {
     })
     .then(response => response.json())
     .then(response => {
-      alert(response["message"])
+      //alert(response["message"])
       updateMessage(response["message"])
     })
     .catch(error => console.error('Error:', error));

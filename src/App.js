@@ -7,9 +7,9 @@ function App() {
 
   const [messages, setMessages] = useState([])
 
-  const updateMessage = (msg) => {
-    //messages.push({id: messages.length, text: msg})
-    setMessages(prevMessages => [...prevMessages, { id: prevMessages.length, text: msg }]);
+  const updateMessage = (msg, sender) => {
+    // sender: 0 = self, 1 = bot
+    setMessages(prevMessages => [...prevMessages, { id: prevMessages.length, text: msg, sender: sender}]);
   }
 
   const MessageTable = ({ messages }) => {

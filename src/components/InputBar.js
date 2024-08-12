@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
@@ -9,13 +9,27 @@ export function InputBar({ message, updateMessage }) {
 
   const [value, setValue] = useState('');
   
+  const handleKeyPress = useCallback((event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      sendMessage();
+    }
+  }, [value]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleKeyPress]);
 
   const handleChange = (event) => {
     setValue(event.target.value);
   };
 
   function sendMessage() {
-    updateMessage(value)
+    updateMessage(value, 0)
     fetch('http://localhost:5000/send_message', {
       method: 'POST',
       headers: {
@@ -26,8 +40,7 @@ export function InputBar({ message, updateMessage }) {
     })
     .then(response => response.json())
     .then(response => {
-      //alert(response["message"])
-      updateMessage(response["message"])
+      updateMessage(response["message"], 1)
     })
     .catch(error => console.error('Error:', error));
     setValue('')

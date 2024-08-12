@@ -6,9 +6,7 @@ export function MessageTableCell({ messages }) {
       <td style={styles.cell}>
         <div style={styles.scrollable}>
             {messages.map(message => (
-                <div>
-                    <MessageBubble key={message.id} text={message.text} id={0} />
-                </div>
+               <MessageBubble key={message.id} text={message.text} id={message.sender} />
             ))}
         </div>
       </td>
@@ -27,8 +25,6 @@ export function MessageTableCell({ messages }) {
         overflowY: 'auto', 
         display: 'flex',
         flexDirection: 'column', 
-        alignItems: 'flex-start', 
-        justifyContent: 'flex-start', 
-    }
+    },
   };
   

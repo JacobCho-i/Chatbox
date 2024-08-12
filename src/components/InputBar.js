@@ -29,6 +29,9 @@ export function InputBar({ message, updateMessage }) {
   };
 
   function sendMessage() {
+    if (value === '') {
+      return
+    }
     updateMessage(value, 0)
     fetch('http://localhost:5000/send_message', {
       method: 'POST',

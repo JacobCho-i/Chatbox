@@ -69,15 +69,33 @@ def add_tag():
 
 @app.route('/get_tag', methods=['GET'])
 def get_tags():
-    return jsonify({'tags': ''})
+    tags = []
+    list_of_intents = intents['intents']
+    for i in list_of_intents:
+        tags.append(i['tag'])
+    return jsonify({'tags': tags}), 200
 
 @app.route('/get_patterns_with_tag', methods=['GET'])
 def get_patterns_with_tag():
-    return jsonify({'responses': ''})
+    data = request.json
+    target_tag = data["tag"]
+    patterns = []
+    list_of_intents = intents['intents']
+    for i in list_of_intents:
+        if i['tag'] == target_tag:
+            patterns = i['patterns']
+    return jsonify({'patterns': patterns}), 200
 
 @app.route('/get_responses_with_tag', methods=['GET'])
 def get_responses_with_tag():
-    return jsonify({'responses': ''})
+    data = request.json
+    target_tag = data["tag"]
+    responses = []
+    list_of_intents = intents['intents']
+    for i in list_of_intents:
+        if i['tag'] == target_tag:
+            responses = i['responses']
+    return jsonify({'responses': responses}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

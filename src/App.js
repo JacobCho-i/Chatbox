@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { InputBar } from './components/InputBar';
 import { MessageTableCell } from './components/MessageTableCell';
 import './App.css';
@@ -6,9 +6,9 @@ import './App.css';
 function App() {
 
   const [messages, setMessages] = useState([])
-
+  
+  // sender param: 0 = self, 1 = bot
   const updateMessage = (msg, sender) => {
-    // sender: 0 = self, 1 = bot
     setMessages(prevMessages => [...prevMessages, { id: prevMessages.length, text: msg, sender: sender}]);
   }
 

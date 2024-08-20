@@ -4,11 +4,13 @@ import { MessageTableCell } from './components/MessageTableCell';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import './App.css';
+import { FormDialog } from './components/Dialog';
 
 function App() {
 
   const [messages, setMessages] = useState([])
-  const [checked, setChecked] = React.useState(true);
+  const [checked, setChecked] = useState(true);
+  const [open, setOpen] = useState(true);
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
@@ -16,6 +18,10 @@ function App() {
   // sender param: 0 = self, 1 = bot
   const updateMessage = (msg, sender) => {
     setMessages(prevMessages => [...prevMessages, { id: prevMessages.length, text: msg, sender: sender}]);
+  }
+
+  const setDialogOpen = (value) => {
+    setOpen(value)
   }
 
   const MessageTable = ({ messages }) => {
@@ -46,6 +52,7 @@ function App() {
           }
           label="Training Mode"
         />
+      <FormDialog open={open} updateOpen={setOpen}/>
     </div>
   );
 }

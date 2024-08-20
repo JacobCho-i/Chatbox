@@ -67,15 +67,19 @@ def add_tag():
         json.dump(intents, f)
     return jsonify({'message': "successfully added new tag"}), 200
 
-@app.route('/get_tag', methods=['GET'])
+@app.route('/get_tag', methods=['POST'])
 def get_tags():
     tags = []
-    list_of_intents = intents['intents']
-    for i in list_of_intents:
-        tags.append(i['tag'])
+    data = request.json
+    question = data["question"]
+    ints = predict_class(question)
+    # list_of_intents = intents['intents']
+    # for i in list_of_intents:
+    for i in range(len(ints)):
+        tags.append(ints[i]['intent'])
     return jsonify({'tags': tags}), 200
 
-@app.route('/get_patterns_with_tag', methods=['GET'])
+@app.route('/get_patterns_with_tag', methods=['POST'])
 def get_patterns_with_tag():
     data = request.json
     target_tag = data["tag"]
@@ -86,7 +90,7 @@ def get_patterns_with_tag():
             patterns = i['patterns']
     return jsonify({'patterns': patterns}), 200
 
-@app.route('/get_responses_with_tag', methods=['GET'])
+@app.route('/get_responses_with_tag', methods=['POST'])
 def get_responses_with_tag():
     data = request.json
     target_tag = data["tag"]

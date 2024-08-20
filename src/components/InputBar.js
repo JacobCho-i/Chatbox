@@ -14,7 +14,7 @@ export function InputBar({ message, updateMessage, isTraining }) {
       event.preventDefault();
       sendMessage();
     }
-  }, [value]);
+  }, [value, isTraining]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
@@ -32,22 +32,42 @@ export function InputBar({ message, updateMessage, isTraining }) {
     if (value === '') {
       return
     }
-    updateMessage(value, 0)
-    fetch('http://localhost:5000/send_message', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({"question": value
-      }),
-    })
-    .then(response => response.json())
-    .then(response => {
-      updateMessage(response["message"], 1)
-    })
-    .catch(error => console.error('Error:', error));
-    setValue('')
-    console.log(message)
+    if (isTraining) {
+      updateMessage(value, 0)
+      fetch('http://localhost:5000/get_tag', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"question": value
+        }),
+      })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response["tags"], 1)
+      })
+      .catch(error => console.error('Error:', error));
+      setValue('')  
+    }
+    else {
+      updateMessage(value, 0)
+      fetch('http://localhost:5000/send_message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"question": value
+        }),
+      })
+      .then(response => response.json())
+      .then(response => {
+        updateMessage(response["message"], 1)
+      })
+      .catch(error => console.error('Error:', error));
+      setValue('')
+      console.log(message)
+    }
+
   }
 
   return (

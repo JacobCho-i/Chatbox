@@ -5,7 +5,7 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
-export function InputBar({ message, updateMessage, isTraining }) {
+export function InputBar({ message, updateMessage, isTraining, tags, updateTags, updateOpen }) {
 
   const [value, setValue] = useState('');
   
@@ -45,9 +45,11 @@ export function InputBar({ message, updateMessage, isTraining }) {
       .then(response => response.json())
       .then(response => {
         console.log(response["tags"], 1)
+        updateTags(response["tags"])
       })
       .catch(error => console.error('Error:', error));
-      setValue('')  
+      setValue('')
+      updateOpen(true)
     }
     else {
       updateMessage(value, 0)

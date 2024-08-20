@@ -5,7 +5,7 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
-export function InputBar({ message, updateMessage }) {
+export function InputBar({ message, updateMessage, isTraining }) {
 
   const [value, setValue] = useState('');
   

@@ -77,6 +77,7 @@ def get_tags():
     # for i in list_of_intents:
     for i in range(len(ints)):
         tags.append(ints[i]['intent'])
+    tags.append("New tag")
     return jsonify({'tags': tags}), 200
 
 @app.route('/get_patterns_with_tag', methods=['POST'])

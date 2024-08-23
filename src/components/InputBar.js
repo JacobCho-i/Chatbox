@@ -33,7 +33,7 @@ export function InputBar({ message, updateMessage, isTraining, tags, updateTags,
       return
     }
     if (isTraining) {
-      updateMessage(value, 0)
+      //updateMessage(value, 0)
       fetch('http://localhost:5000/get_tag', {
         method: 'POST',
         headers: {

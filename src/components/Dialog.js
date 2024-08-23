@@ -8,6 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
@@ -15,6 +16,9 @@ import InputLabel from '@mui/material/InputLabel';
 export function FormDialog({ open, updateOpen, tags }) {
 
    const [tag, setTag] = React.useState('greeting');
+   const [tagName, setTagName] = React.useState('');
+   const [response, setResponse] = React.useState('');
+   const [patterns, setPatterns] = React.useState([]);
 
   const handleClose = () => {
     updateOpen(false);
@@ -24,7 +28,32 @@ export function FormDialog({ open, updateOpen, tags }) {
     setTag(
       event.target.value,
     );
+    fetch('http://localhost:5000/get_patterns_with_tag', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({"tag": event.target.value
+      }),
+    })
+    .then(response => response.json())
+    .then(response => {
+      setPatterns(response["patterns"])
+    })
+    .catch(error => console.error('Error:', error));
   };
+
+  const handleTagNameChange = (event) => {
+    setTagName(
+      event.target.value,
+    );
+  }
+
+  const handleResponseChange = (event) => {
+    setResponse(
+      event.target.value,
+    );
+  }
 
   return (
       <Dialog
@@ -43,6 +72,16 @@ export function FormDialog({ open, updateOpen, tags }) {
         }}
       >
         <DialogTitle>Training</DialogTitle>
+        <Box
+            noValidate
+            component="form"
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              m: 'auto',
+              width: 'fit-content',
+            }}
+        >
         <FormControl sx={{ mt: 2 }}>
               <InputLabel htmlFor="tags">tags</InputLabel>
               <Select
@@ -61,11 +100,46 @@ export function FormDialog({ open, updateOpen, tags }) {
                 ))}
               </Select>
             </FormControl>
+            </Box>
         <DialogContent>
-          <DialogContentText>
-            Please add a new response according to this tag.
-          </DialogContentText>
-          <TextField
+        {
+          tag === "New tag" ? (  
+            <>
+              {/* adding new tags */}
+              <DialogContentText>
+          Please insert name for this tag.
+              </DialogContentText>
+              <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="name"
+                  name="tag"
+                  label="New tag"
+                  fullWidth
+                  variant="standard"
+                  value={tagName}
+                  onChange={handleTagNameChange}
+              />
+            </> 
+          ) : (
+            <>
+              {/* using existing tags */}
+              <DialogContentText>
+                Some patterns involving tags {tag} include:
+              </DialogContentText>
+              {patterns.map((pattern, key) => (
+                <DialogContentText key={key}>
+                  "{pattern}"
+                </DialogContentText>
+              ))}
+            </>
+          )
+        }
+        <DialogContentText>
+          Please add a new response according to this tag.
+        </DialogContentText>
+        <TextField
             autoFocus
             required
             margin="dense"
@@ -74,12 +148,14 @@ export function FormDialog({ open, updateOpen, tags }) {
             label="New response"
             fullWidth
             variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Confirm</Button>
-        </DialogActions>
+            value={response}
+            onChange={handleResponseChange}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose}>Confirm</Button>
+      </DialogActions>
       </Dialog>
   );
 }

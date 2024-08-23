@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 
-export function FormDialog({ open, updateOpen, tags }) {
+export function FormDialog({ open, updateOpen, tags, pattern }) {
 
    const [tag, setTag] = React.useState('greeting');
    const [tagName, setTagName] = React.useState('');
@@ -21,6 +21,9 @@ export function FormDialog({ open, updateOpen, tags }) {
    const [patterns, setPatterns] = React.useState([]);
 
   const handleClose = () => {
+    setTagName('')
+    setPatterns([])
+    setResponse('')
     updateOpen(false);
   };
 
@@ -54,6 +57,50 @@ export function FormDialog({ open, updateOpen, tags }) {
       event.target.value,
     );
   }
+
+
+  const submitResponse = () => {
+    if (tag === "New tag") {
+      // inserting new tag
+      fetch('http://localhost:5000/add_tag', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"tag": tagName, "pattern": pattern, "response": response
+        }),
+      })
+      .then(response => response.json())
+      .catch(error => console.error('Error:', error));
+    } 
+    else {
+      // using existing tag
+      fetch('http://localhost:5000/add_pattern', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"tag": tag, "pattern": pattern
+        }),
+      })
+      .then(response => response.json())
+      .catch(error => console.error('Error:', error));
+      fetch('http://localhost:5000/add_response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"tag": tag, "response": response
+        }),
+      })
+      .then(response => response.json())
+      .catch(error => console.error('Error:', error));
+    }
+    setTagName('')
+    setPatterns([])
+    setResponse('')
+    updateOpen(false);
+  } 
 
   return (
       <Dialog
@@ -154,7 +201,7 @@ export function FormDialog({ open, updateOpen, tags }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleClose}>Confirm</Button>
+        <Button onClick={submitResponse}>Confirm</Button>
       </DialogActions>
       </Dialog>
   );

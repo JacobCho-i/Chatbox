@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { InputBar } from './components/InputBar';
 import { MessageTableCell } from './components/MessageTableCell';
 import Switch from '@mui/material/Switch';
@@ -12,6 +12,9 @@ function App() {
   const [checked, setChecked] = useState(true);
   const [open, setOpen] = useState(false);
   const [tags, setTags] = useState([])
+  const [pattern, setPattern] = useState('');
+
+  const tempValueRef = useRef('');
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
@@ -23,6 +26,10 @@ function App() {
 
   const updateTags = (tags) => {
     setTags(tags)
+  }
+
+  const updatePattern = (pattern) => {
+    setPattern(pattern)
   }
 
   const setDialogOpen = (value) => {
@@ -54,14 +61,14 @@ function App() {
     <div className="App">
       goofy chatbot 
       <MessageTable messages={messages} />
-      <InputBar message={messages} updateMessage={updateMessage} isTraining={checked} tags={tags} updateTags={updateTags} updateOpen={updateOpen}/>
+      <InputBar message={messages} updateMessage={updateMessage} isTraining={checked} tags={tags} updateTags={updateTags} updateOpen={updateOpen} pattern={pattern} updatePattern={updatePattern}/>
       <FormControlLabel
           control={
             <Switch checked={checked} onChange={handleChange} name="training" />
           }
           label="Training Mode"
         />
-      <FormDialog open={open} updateOpen={updateOpen} tags={tags}/>
+      <FormDialog open={open} updateOpen={updateOpen} tags={tags} pattern={pattern}/>
     </div>
   );
 }

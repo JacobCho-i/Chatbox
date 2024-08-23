@@ -18,10 +18,12 @@ def send_message():
     
     return jsonify({'message': response}), 200
 
+# TODO: check for duplicate values
+
 @app.route('/add_pattern', methods=['POST'])
 def add_pattern():
     data = request.json
-    pattern = data["response"]
+    pattern = data["pattern"]
     target_tag = data["tag"]
     list_of_intents = intents['intents']
     for i in list_of_intents:
@@ -31,7 +33,6 @@ def add_pattern():
                 patterns.append(pattern)
             i['patterns'] = patterns
             break
-    #TODO: check if this is valid addr
     with open('intents.json', 'w') as f:
         json.dump(intents, f)
     return jsonify({'message': "successfully added new pattern"}), 200
@@ -49,7 +50,6 @@ def add_response():
                 patterns.append(response)
             i['responses'] = patterns
             break
-    #TODO: check if this is valid addr
     with open('intents.json', 'w') as f:
         json.dump(intents, f)
     return jsonify({'message': "successfully added new response"}), 200
@@ -61,7 +61,7 @@ def add_tag():
     ex_pattern = data["pattern"]
     tag_name = data["tag"]
     list_of_intents = intents['intents']
-    data_json = { "tag":tag_name, "patterns":[ex_pattern], "responses":[ex_response]}
+    data_json = { "tag":tag_name, "patterns":[ex_pattern], "responses":[ex_response] }
     list_of_intents.append(data_json)
     with open('intents.json', 'w') as f:
         json.dump(intents, f)

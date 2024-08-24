@@ -5,12 +5,16 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import './App.css';
 import { FormDialog } from './components/Dialog';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import Button from '@mui/material/Button';
 
 function App() {
 
   const [messages, setMessages] = useState([])
   const [checked, setChecked] = useState(true);
   const [open, setOpen] = useState(false);
+  const [alert, setAlert] = useState(0);
   const [tags, setTags] = useState([])
   const [pattern, setPattern] = useState('');
 
@@ -40,6 +44,17 @@ function App() {
     setOpen(open)
   }
 
+  const updateAlert = (alert) => {
+    setAlert(alert)
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setAlert(0);
+  };
+
   const MessageTable = ({ messages }) => {
     return (
       <table>
@@ -59,6 +74,26 @@ function App() {
 
   return (
     <div className="App">
+          <Snackbar
+      open={alert != 0}
+      autoHideDuration={5000} 
+      onClose={handleClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    >
+      {
+        alert === 1 ? 
+        <Alert severity="success">
+          The bot gained more knowledge!
+        </Alert>
+        :
+        <Alert severity="error">
+          Error happened while learning.
+        </Alert>
+      }
+      
+    </Snackbar>
+
+
       goofy chatbot 
       <MessageTable messages={messages} />
       <InputBar message={messages} updateMessage={updateMessage} isTraining={checked} tags={tags} updateTags={updateTags} updateOpen={updateOpen} pattern={pattern} updatePattern={updatePattern}/>
@@ -68,7 +103,7 @@ function App() {
           }
           label="Training Mode"
         />
-      <FormDialog open={open} updateOpen={updateOpen} tags={tags} pattern={pattern}/>
+      <FormDialog open={open} updateOpen={updateOpen} tags={tags} pattern={pattern} updateAlert={updateAlert}/>
     </div>
   );
 }

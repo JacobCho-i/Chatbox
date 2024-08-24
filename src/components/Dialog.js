@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 
-export function FormDialog({ open, updateOpen, tags, pattern }) {
+export function FormDialog({ open, updateOpen, tags, pattern, updateAlert }) {
 
    const [tag, setTag] = React.useState('greeting');
    const [tagName, setTagName] = React.useState('');
@@ -71,7 +71,10 @@ export function FormDialog({ open, updateOpen, tags, pattern }) {
         }),
       })
       .then(response => response.json())
-      .catch(error => console.error('Error:', error));
+      .catch(error => {
+        console.error('Error:', error);
+        updateAlert(2);
+      });
     } 
     else {
       // using existing tag
@@ -84,7 +87,10 @@ export function FormDialog({ open, updateOpen, tags, pattern }) {
         }),
       })
       .then(response => response.json())
-      .catch(error => console.error('Error:', error));
+      .catch(error => {
+        console.error('Error:', error);
+        updateAlert(2);
+      });
       fetch('http://localhost:5000/add_response', {
         method: 'POST',
         headers: {
@@ -94,12 +100,16 @@ export function FormDialog({ open, updateOpen, tags, pattern }) {
         }),
       })
       .then(response => response.json())
-      .catch(error => console.error('Error:', error));
+      .catch(error => {
+        console.error('Error:', error);
+        updateAlert(2);
+      });
     }
     setTagName('')
     setPatterns([])
     setResponse('')
     updateOpen(false);
+    updateAlert(1);
   } 
 
   return (

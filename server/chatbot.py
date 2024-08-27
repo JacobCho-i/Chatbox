@@ -32,6 +32,15 @@ def bag_of_words(sentence):
     return np.array(bag)
 
 def predict_class(sentence):
+    # reloading
+    """
+    global intents, words, classes, model
+    intents = json.loads(open('intents.json').read())
+    words = pickle.load(open('words.pkl', 'rb'))
+    classes = pickle.load(open('classes.pkl', 'rb'))
+    model = tf.keras.models.load_model('chatbot_model.h5')
+    """
+
     bow = bag_of_words(sentence)
     res = model.predict(np.array([bow]))[0]
 

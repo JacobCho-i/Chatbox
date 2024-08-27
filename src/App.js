@@ -86,9 +86,14 @@ function App() {
           The bot gained more knowledge!
         </Alert>
         :
-        <Alert severity="error">
+        (
+          alert === 2 ? 
+          <Alert severity="error">
           Error happened while learning.
-        </Alert>
+          </Alert>
+          :
+          <div></div>
+        )
       }
       
     </Snackbar>

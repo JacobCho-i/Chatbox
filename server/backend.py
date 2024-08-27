@@ -1,6 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from chatbot import predict_class, get_response 
+import training
+import os
+import sys
+import threading
+import time
 
 import json
 
@@ -14,6 +19,7 @@ def send_message():
     data = request.json
     question = data["question"]
     prediction = predict_class(question.lower())
+    print(prediction)
     response = get_response(prediction)
     
     return jsonify({'message': response}), 200
@@ -39,6 +45,7 @@ def add_pattern():
 
 @app.route('/add_response', methods=['POST'])
 def add_response():
+    global intents
     data = request.json
     response = data["response"]
     target_tag = data["tag"]
@@ -52,10 +59,16 @@ def add_response():
             break
     with open('intents.json', 'w') as f:
         json.dump(intents, f)
+    training.train()
+    intents = json.loads(open('intents.json').read())
     return jsonify({'message': "successfully added new response"}), 200
 
 @app.route('/add_tag', methods=['POST'])
 def add_tag():
+    def restart():
+        time.sleep(3)
+        os.execv(sys.executable, ['python'] + sys.argv)
+    global intents
     data = request.json
     ex_response = data["response"]
     ex_pattern = data["pattern"]
@@ -65,7 +78,13 @@ def add_tag():
     list_of_intents.append(data_json)
     with open('intents.json', 'w') as f:
         json.dump(intents, f)
+    training.train()
+    intents = json.loads(open('intents.json').read())  
+
+    # TODO: check for thread
+    threading.Thread(target=restart).start()
     return jsonify({'message': "successfully added new tag"}), 200
+
 
 @app.route('/get_tag', methods=['POST'])
 def get_tags():

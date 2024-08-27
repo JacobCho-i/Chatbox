@@ -7,7 +7,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -19,6 +20,7 @@ export function FormDialog({ open, updateOpen, tags, pattern, updateAlert }) {
    const [tagName, setTagName] = React.useState('');
    const [response, setResponse] = React.useState('');
    const [patterns, setPatterns] = React.useState([]);
+   const [loading, setLoading] = React.useState(false);
 
   const handleClose = () => {
     setTagName('')
@@ -70,9 +72,15 @@ export function FormDialog({ open, updateOpen, tags, pattern, updateAlert }) {
         body: JSON.stringify({"tag": tagName, "pattern": pattern, "response": response
         }),
       })
-      .then(response => response.json())
+      .then(response => {
+        response.json()
+        console.log("response arrived!");
+        setLoading(false);
+        updateAlert(1);
+      })
       .catch(error => {
         console.error('Error:', error);
+        setLoading(false);
         updateAlert(2);
       });
     } 
@@ -99,20 +107,34 @@ export function FormDialog({ open, updateOpen, tags, pattern, updateAlert }) {
         body: JSON.stringify({"tag": tag, "response": response
         }),
       })
-      .then(response => response.json())
+      .then(response => {
+        response.json()
+        console.log("response arrived!");
+        setLoading(false);
+        updateAlert(1);
+      })
       .catch(error => {
         console.error('Error:', error);
+        setLoading(false);
         updateAlert(2);
       });
     }
     setTagName('')
     setPatterns([])
     setResponse('')
+    setLoading(true);
     updateOpen(false);
-    updateAlert(1);
   } 
 
   return (
+    <>
+      <Backdrop
+        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+        open={loading}
+        onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -214,5 +236,7 @@ export function FormDialog({ open, updateOpen, tags, pattern, updateAlert }) {
         <Button onClick={submitResponse}>Confirm</Button>
       </DialogActions>
       </Dialog>
+    </>
+      
   );
 }

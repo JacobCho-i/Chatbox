@@ -7,6 +7,11 @@
   text-align: center;
 }
 
+.Buttons {
+  display: flex;
+  align-items: center;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

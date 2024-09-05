@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from chatbot import predict_class, get_response 
 import training
@@ -13,6 +13,11 @@ app = Flask(__name__)
 CORS(app)
 index = 1
 intents = json.loads(open('intents.json').read())
+
+@app.route('/download_model', methods=['GET'])
+def download_model():
+    cur_dir = os.path.dirname(os.path.abspath(__file__))
+    return send_from_directory(cur_dir, "intents.json", as_attachment=True)
 
 @app.route('/send_message', methods=['POST'])
 def send_message():

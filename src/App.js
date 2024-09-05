@@ -82,6 +82,33 @@ function App() {
     );
   };
   
+  const handleDownload = async () => {
+    try {
+      const filename = 'model.json'; 
+      const response = await fetch(`http://localhost:5000/download_model`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } else {
+        console.error('Failed to download file');
+      }
+    } catch (error) {
+      console.error('Error while downloading the file:', error);
+    }
+  };
 
   useEffect(() => {
     //
@@ -144,6 +171,7 @@ function App() {
               role={undefined}
               variant="contained"
               tabIndex={-1}
+              onClick={handleDownload}
               startIcon={<CloudDownloadIcon />}
             >
               Export model

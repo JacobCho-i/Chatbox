@@ -129,11 +129,37 @@ function App() {
 
       if (response.ok) {
         console.log('File uploaded successfully');
+        setAlert(3);
       } else {
         console.log('Failed to upload file');
       }
     } catch (error) {
       console.error('Error uploading file:', error);
+    }
+  };
+
+  const getAlertMessage = (alert) => {
+    switch (alert) {
+      case 1:
+        return (
+          <Alert severity="success">
+            The bot gained more knowledge!
+          </Alert>
+        );
+      case 3:
+        return (
+          <Alert severity="success">
+            Successfully imported the model!
+          </Alert>
+        );
+      case 2:
+        return (
+          <Alert severity="error">
+            Error happened while learning.
+          </Alert>
+        );
+      default:
+        return null; 
     }
   };
 
@@ -149,21 +175,7 @@ function App() {
       onClose={handleClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
     >
-      {
-        alert === 1 ? 
-        <Alert severity="success">
-          The bot gained more knowledge!
-        </Alert>
-        :
-        (
-          alert === 2 ? 
-          <Alert severity="error">
-          Error happened while learning.
-          </Alert>
-          :
-          <div></div>
-        )
-      }
+      {getAlertMessage(alert)}
       
     </Snackbar>
 

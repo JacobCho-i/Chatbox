@@ -110,6 +110,33 @@ function App() {
     }
   };
 
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      console.log('Please select a file to upload');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('http://localhost:5000/upload_model', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log('File uploaded successfully');
+      } else {
+        console.log('Failed to upload file');
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  };
+
   useEffect(() => {
     //
   }, []);
@@ -162,7 +189,7 @@ function App() {
               Import model
               <VisuallyHiddenInput
                 type="file"
-                onChange={(event) => console.log(event.target.files)}
+                onChange={handleFileChange}
                 multiple
               />
             </Button>

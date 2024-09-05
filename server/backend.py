@@ -13,11 +13,29 @@ app = Flask(__name__)
 CORS(app)
 index = 1
 intents = json.loads(open('intents.json').read())
+PROJECT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
 @app.route('/download_model', methods=['GET'])
 def download_model():
-    cur_dir = os.path.dirname(os.path.abspath(__file__))
+    cur_dir = PROJECT_DIRECTORY
     return send_from_directory(cur_dir, "intents.json", as_attachment=True)
+
+@app.route('/upload_model', methods=['POST'])
+def upload_model():
+    if 'file' not in request.files:
+        return 'No file part', 400
+    
+    file = request.files['file']
+
+    if file.filename == '':
+        return 'No file selected', 400
+    
+    try:
+        file_path = os.path.join(PROJECT_DIRECTORY, "intents.json")
+        file.save(file_path)
+        return 'File successfully uploaded and replaced', 200
+    except Exception as e:
+        return f'Failed to upload file: {str(e)}', 500
 
 @app.route('/send_message', methods=['POST'])
 def send_message():

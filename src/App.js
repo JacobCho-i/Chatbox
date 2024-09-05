@@ -6,6 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import './App.css';
 import { FormDialog } from './components/Dialog'
 import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
 import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
@@ -188,34 +189,43 @@ function App() {
             <Switch checked={checked} onChange={handleChange} name="training" />
           }
           label="Training Mode"
-        />
-        <div className='Buttons'>
-          <FormDialog open={open} updateOpen={updateOpen} tags={tags} pattern={pattern} updateAlert={updateAlert}/>
-            <Button
-              component="label"
-              role={undefined}
-              variant="contained"
-              tabIndex={-1}
-              startIcon={<CloudUploadIcon />}
-            >
+        />  
+        <FormDialog open={open} updateOpen={updateOpen} tags={tags} pattern={pattern} updateAlert={updateAlert}/>
+        <Grid container 
+          spacing={2}
+          justifyContent="center"
+        > 
+          <Grid item>
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+                style={{ marginRight: '10px' }} 
+              >
               Import model
               <VisuallyHiddenInput
                 type="file"
                 onChange={handleFileChange}
                 multiple
               />
-            </Button>
-            <Button
+              </Button>
+              </Grid>
+              <Grid item>
+              <Button
               component="label"
               role={undefined}
               variant="contained"
               tabIndex={-1}
               onClick={handleDownload}
               startIcon={<CloudDownloadIcon />}
-            >
+              style={{ marginLeft: '10px' }} 
+              >
               Export model
             </Button>
-          </div>
+            </Grid>
+            </Grid>
     </div>
   );
 }

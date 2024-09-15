@@ -22,6 +22,9 @@ def download_model():
 
 @app.route('/upload_model', methods=['POST'])
 def upload_model():
+    def restart():
+        time.sleep(3)
+        os.execv(sys.executable, ['python'] + sys.argv)
     if 'file' not in request.files:
         return 'No file part', 400
     
@@ -33,6 +36,9 @@ def upload_model():
     try:
         file_path = os.path.join(PROJECT_DIRECTORY, "intents.json")
         file.save(file_path)
+        training.train()
+        intents = json.loads(open('intents.json').read())  
+        threading.Thread(target=restart).start()
         return 'File successfully uploaded and replaced', 200
     except Exception as e:
         return f'Failed to upload file: {str(e)}', 500
